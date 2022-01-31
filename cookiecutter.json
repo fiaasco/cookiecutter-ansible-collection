@@ -1,0 +1,28 @@
+{
+    "collection_namespace": "OVERRIDEN",
+    "collection_name": "OVERRIDEN",
+    "author_name": "OVERRIDEN",
+    "author_email": "OVERRIDDEN",
+    "collection_description": "OVERRIDDEN",
+    "collection_version": "0.0.1",
+    "collection_spdx_license":
+       ["BSD-3-Clause",
+        "MIT",
+        "GPL-3.0-or-later",
+        "0BSD",
+        "AAL",
+        "ADSL",
+        "Apache-2.0",
+        "Artistic-2.0",
+        "CC-BY-4.0",
+        "CC-BY-SA-4.0",
+        "CC0-1.0",
+        "GPL-2.0-or-later",
+        "MIT",
+        "MPL-2.0",
+        "MPL-2.0-no-copyleft-exception",
+        "Python-2.0",
+        "X11"
+    ]
+
+}

@@ -1,0 +1,16 @@
+---
+- name: prepare
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: enable repos (workaround for container)
+      command:
+        cmd: dnf config-manager --enable rhel*
+        warn: false
+      when: ansible_distribution == "RedHat"
+
+    - name: disable ubi repos
+      command:
+        cmd: dnf config-manager --disable ubi*
+        warn: false
+      when: ansible_distribution == "RedHat"

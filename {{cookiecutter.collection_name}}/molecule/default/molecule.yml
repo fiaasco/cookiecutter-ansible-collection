@@ -1,0 +1,45 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+scenario:
+  name: default
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+  flake8
+platforms:
+  - name: "{{ cookiecutter.collection_namespace}}-{{ cookiecutter.collection_name }}-rhel8"
+    image: registry.access.redhat.com/ubi8-init
+    command: /usr/sbin/init
+    privileged: true
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    env:
+      http_proxy: ${http_proxy}
+      https_proxy: ${https_proxy}
+      no_proxy: ${no_proxy}
+provisioner:
+  name: ansible
+  # enable logging of no_log values
+  log: false
+  options:
+    # increase log levels here
+    vvv: false
+  config_options:
+    defaults:
+      callback_whitelist: profile_tasks
+      jinja2_extensions: jinja2.ext.do
+      gather_timeout: 30
+      timeout: 30
+      # increase verbosity of ansible runs (3-5)
+      verbosity: 0
+    ssh_connection:
+      pipelining: false
+verifier:
+  name: testinfra

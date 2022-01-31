@@ -1,0 +1,39 @@
+{% raw -%}
+# Molecule managed
+# Default containers always contain systemd, you chose to start it in molecule.yml
+
+{% if item.registry is defined %}
+FROM {{ item.registry.url }}/{{ item.image }}
+{% else %}
+FROM {{ item.image }}
+{% endif %}
+
+{% if item.env is defined %}
+{% for var, value in item.env.items() %}
+{% if value %}
+ENV {{ var }} {{ value }}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+RUN /bin/sh -c 'if [ -x "$(command -v apt-get)" ]; then apt-get update && apt-get upgrade -y && apt-get install -y python sudo bash; fi'
+# skip yum if it's a symlink to dnf!
+RUN /bin/sh -c 'if [ ! -L $(command -v yum) && -x "$(command -v yum)" ]; then rm -f /etc/yum.repos.d/CentOS-Media.repo && touch /var/lib/rpm/* && yum makecache && yum update -y && yum install -y python sudo yum-plugin-ovl bash && sed -i 's/plugins=0/plugins=1/g' /etc/yum.conf; fi'
+RUN /bin/sh -c 'if [ -x "$(command -v zypper)" ]; then zypper refresh && zypper update -y && zypper install -y python sudo bash; fi'
+RUN /bin/sh -c 'if [ -x "$(command -v apk)" ]; then apk update && apk add python sudo bash; fi'
+RUN /bin/sh -c 'if [ -x "$(command -v pacman)" ]; then pacman --sync --noconfirm --refresh python2 bash; fi'
+RUN /bin/sh -c 'if [ -x "$(command -v dnf)" ]; then dnf makecache fast; dnf update -y; dnf --assumeyes install python3 python3-devel python3-dnf bash sudo; fi'
+RUN /bin/sh -c 'if [ -x "$(command -v emerge)" ]; then emerge --ask n =dev-lang/python-2\* gentoolkit; fi'
+
+RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
+rm -f /lib/systemd/system/multi-user.target.wants/*;\
+rm -f /etc/systemd/system/*.wants/*;\
+rm -f /lib/systemd/system/local-fs.target.wants/*; \
+rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
+rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
+rm -f /lib/systemd/system/basic.target.wants/*;\
+rm -f /lib/systemd/system/anaconda.target.wants/*;
+
+VOLUME ["/sys/fs/cgroup"]
+CMD ["/usr/lib/systemd/systemd"]
+{% endraw %}

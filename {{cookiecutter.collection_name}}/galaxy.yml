@@ -1,0 +1,18 @@
+---
+namespace: "{{ cookiecutter.collection_namespace }}"
+name: "{{ cookiecutter.collection_name }}"
+version: "{{cookiecutter.collection_version }}"
+license:
+  - "{{ cookiecutter.collection_spdx_license }}"
+readme: "README.md"
+authors:
+  - "{{ cookiecutter.author_name }} <{{ cookiecutter.author_email }}>"
+description: "{{ cookiecutter.collection_description }}"
+
+# Dict of dependencies, other collections this collection requires to be installed for it to be usable
+dependencies: {}
+
+repository:
+documentation:
+homepage:
+issues:
